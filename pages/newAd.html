@@ -1,0 +1,293 @@
+<div id="wrapper" style="overflow: hidden;">
+	<div id="scroller" style="transition: transform 0ms; -webkit-transition: transform 0ms; transform-origin: 0px 0px 0px; transform: translate(0px, 0px) scale(1) translateZ(0px);">
+		<div class="row list-group">
+			<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+
+				<form id="form-newad" role="form" autocomplete="off" style="padding: 15px 15px" >
+					<h2>Hirdess könnyen ! <small>és  gyorsan.</small></h2>
+					<hr class="colorgraph">
+					<div class="form-group">
+						<input type="text" name="megnevezes" ng-model="formData.megnevezes" class="form-control input-lg"  placeholder="megnevezés" value="" >
+						<span class="help-block" ng-show="errormegnevezes">{{ errormegnevezes}}</span>
+					</div>
+					<div class="form-group">
+						<input  type="text" name="ar" id="ar"  ng-model="formData.ar" class="form-control input-lg"  placeholder="ár (millió Forint)" value="" >
+						<span class="help-block" ng-show="errorar">{{ errorar}}</span>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 col-sm-6 col-md-6">
+							<div class="form-group">
+								<input  type="text" class="form-control input-lg" name="telepules"  ng-model="formData.telepules" tabindex="1"  placeholder="település" value="">
+								<span class="help-block" ng-show="errortelepules">{{ errortelepules}}</span>
+
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-6 col-md-6">
+							<div class="form-group">
+								<input   type="text" name="cim" class="form-control input-lg"  ng-model="formData.cim"  placeholder="cím" value="" >
+								<span class="help-block" ng-show="errorcim">{{ errorcim}}</span>
+							</div>
+						</div>
+					</div>
+
+					<br/>
+
+					<div class="row">
+						<div class="col-xs-12 col-sm-6 col-md-6">
+							<input type="button" ng-click='capturePhoto()' class="btn btn-primary btn-block btn-lg" value="Fotóóóóóz"/>
+						</div>
+						<div class="col-xs-12 col-sm-6 col-md-6">
+							<input type="button"  ng-click='getPhoto()' class="btn btn-primary btn-block btn-lg"  value="Tallóóóóóz"/>
+						</div>
+
+						<br>
+
+						<img style="display:none;width:100%" id="ingatlanKep" src="" />
+
+					</div>
+					<br/>
+					<span class="help-block" ng-show="errorkep">{{ errorkep}}</span>
+					<div class="row">
+						<div class="col-xs-12 col-sm-6 col-md-6">
+							<div class="form-group">
+								<select name="tipus" ng-model="formData.tipus" class=" form-group input-lg">
+									<option value="">Típus</option>
+
+									<option value="1">Családi ház</option>
+									<option value="2">Garázs</option>
+									<option value="3">Ikerház</option>
+									<option value="4">Ipari ingatlan</option>
+									<option value="5">Iroda</option>
+									<option value="6">Lakás</option>
+									<option value="7">Sorház</option>
+									<option value="8">Telek</option>
+									<option value="9">Üdülő</option>
+									<option value="10">Üzlethelység</option>
+
+								</select>
+								<span class="help-block" ng-show="errortipus">{{ errortipus}}</span>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-6 col-md-6">
+							<div class="form-group">
+								<select name="komfortfok" ng-model="formData.komfortfok"  class=" form-group input-lg">
+									<option value="">Komfort</option>
+
+									<option value="1">Összkomfortos</option>
+									<option value="2">Komfortos</option>
+									<option value="3">Félkomfortos</option>
+									<option value="4">Komfort nélküli</option>
+									<option value="5">Szükséglakás</option>
+									<option value="6">Közművesített</option>
+									<option value="7">Közművek nélküli</option>
+								</select>
+								<span class="help-block" ng-show="errorkomfortfok">{{ errorkomfortfok}}</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-12 col-sm-6 col-md-6">
+							<div class="form-group">
+								<input   type="text" name="alapterulet" id="alapterulet" class="form-control input-lg" ng-model="formData.alapterulet"  placeholder="alapterület (m²) " value="">
+								<span class="help-block" ng-show="erroralapterulet">{{ erroralapterulet}}</span>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-6 col-md-6">
+							<div class="form-group">
+								<input  type="text" name="telekterulet" id="telekterulet" class="form-control input-lg" ng-model="formData.telekterulet"  placeholder="telekterület (m²)" value="">
+								<span class="help-block" ng-show="errortelekterulet">{{ errortelekterulet}}</span>
+							</div>
+						</div>
+
+					</div>
+					<div class="form-group">
+						<span  class="button-checkbox">
+							<button type="button" class="btn" data-color="primary">
+								Víz
+							</button>
+							<input name="viz" ng-model="formData.viz" type="checkbox" class="hidden" value="1"/>
+						</span>
+						<span class="button-checkbox">
+							<button type="button" class="btn" data-color="primary">
+								Gáz
+							</button>
+							<input name="gaz" ng-model="formData.gaz" type="checkbox" class="hidden"  value="1"/>
+						</span>
+						<span class="button-checkbox">
+							<button type="button" class="btn" data-color="primary">
+								Villany
+							</button>
+							<input name="villany" ng-model="formData.villany" type="checkbox" class="hidden" value="1"/>
+						</span>
+						<span class="button-checkbox">
+							<button type="button" class="btn" data-color="primary">
+								Pince
+							</button>
+							<input name="pince" ng-model="formData.pince" type="checkbox" class="hidden" value="1"/>
+						</span>
+
+						<span class="button-checkbox">
+							<button  type="button" class="btn" data-color="primary">
+								KábelTV
+							</button>
+							<input name="kabeltv" ng-model="formData.kabeltv" type="checkbox" class="hidden" value="1" />
+						</span>
+						<span class="button-checkbox">
+							<button type="button" class="btn" data-color="primary">
+								Garázs
+							</button>
+							<input name="garazs" ng-model="formData.garazs" type="checkbox" class="hidden" value="1"/>
+						</span>
+						<span class="button-checkbox">
+							<button type="button" class="btn" data-color="primary">
+								Csatorna
+							</button>
+							<input name="csatorna" ng-model="formData.csatorna" type="checkbox" class="hidden" value="1"/>
+						</span>
+						<span class="button-checkbox">
+							<button type="button" class="btn" data-color="primary">
+								Központifűtés
+							</button>
+							<input name="kozponti" ng-model="formData.kozponti" type="checkbox" class="hidden" value="1"/>
+						</span>
+					</div>
+					<br />
+					<br />
+					<div class="row">
+						<div ng-if="userLogged" class="col-xs-12 col-sm-6 col-md-6">
+							<input type="button"  value="Hirdetés feltöltése" ng-click='newadAjax()' class="btn btn-success btn-block btn-lg" >
+						</div>
+						<div class="col-xs-12 col-sm-6 col-md-6">
+							<input type="button"   value="Hirdetés mentése" ng-click='ingSave()' class="btn btn-warning btn-block  btn-lg" >
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	</div>
+	<div style="position: absolute; z-index: 100; width: 7px; bottom: 2px; top: 2px; right: 1px; pointer-events: none; transition: opacity 0ms 0ms; -webkit-transition: opacity 0ms 0ms; overflow: hidden; opacity: 1;">
+		<div style="position: absolute; z-index: 100; border: 1px solid rgba(255, 255, 255, 0.901961); box-sizing: border-box; width: 100%; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; pointer-events: none; transition: transform 0ms cubic-bezier(0.33, 0.66, 0.66, 1); -webkit-transition: transform 0ms cubic-bezier(0.33, 0.66, 0.66, 1); transform: translate(0px, 0px) translateZ(0px); height: 220px; background: padding-box padding-box rgba(0, 0, 0, 0.498039);"></div>
+	</div>
+</div>
+<script src="js/iscroll.js"></script>
+<script type="text/javascript">
+	$(function() {
+
+		$('.button-checkbox').each(function() {
+
+			// Settings
+			var $widget = $(this), $button = $widget.find('button'), $checkbox = $widget.find('input:checkbox'), color = $button.data('color'), settings = {
+				on : {
+					icon : 'glyphicon glyphicon-check'
+				},
+				off : {
+					icon : 'glyphicon glyphicon-unchecked'
+				}
+			};
+
+			// Event Handlers
+			$button.on('click', function() {
+				$checkbox.prop('checked', !$checkbox.is(':checked'));
+				$checkbox.triggerHandler('change');
+				updateDisplay();
+			});
+			$checkbox.on('change', function() {
+				updateDisplay();
+			});
+
+			// Actions
+			function updateDisplay() {
+				var isChecked = $checkbox.is(':checked');
+
+				// Set the button's state
+				$button.data('state', (isChecked) ? "on" : "off");
+
+				// Set the button's icon
+				$button.find('.state-icon').removeClass().addClass('state-icon ' + settings[$button.data('state')].icon);
+
+				// Update the button's color
+				if (isChecked) {
+					$button.removeClass('btn-default').addClass('btn-' + color + ' active');
+				} else {
+					$button.removeClass('btn-' + color + ' active').addClass('btn-default');
+				}
+			}
+
+			// Initialization
+			function init() {
+
+				updateDisplay();
+
+				// Inject the icon if applicable
+				if ($button.find('.state-icon').length == 0) {
+					$button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i> ');
+				}
+			}
+
+			init();
+
+		});
+	});
+	var myScroll;
+	loaded();
+	function loaded() {
+		myScroll = new iScroll('wrapper', {
+			useTransform : false,
+			onBeforeScrollStart : function(e) {
+				var target = e.target;
+				while (target.nodeType != 1)
+				target = target.parentNode;
+
+				if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA')
+					e.preventDefault();
+			}
+		});
+
+	}
+
+
+	document.addEventListener('touchmove', function(e) {
+		e.preventDefault();
+
+	}, false);
+	document.addEventListener('DOMContentLoaded', loaded, false);
+
+</script>
+<style type="text/css" media="all">
+	body, ul, li {
+		padding: 0;
+		margin: 0;
+		border: 0;
+	}
+
+	body {
+		font-size: 12px;
+		-webkit-user-select: none;
+		-webkit-text-size-adjust: none;
+		font-family: helvetica;
+	}
+
+	#wrapper {
+		position: absolute;
+		z-index: 1;
+		top: 0px;
+		bottom: 0px;
+		left: 0;
+		width: 100%;
+		background: white;
+		overflow: auto;
+	}
+
+	#scroller {
+		position: absolute;
+		z-index: 1;
+		/*	-webkit-touch-callout:none;*/
+		-webkit-tap-highlight-color: rgba(0,0,0,0);
+		width: 100%;
+		padding: 0;
+	}
+
+</style>
+

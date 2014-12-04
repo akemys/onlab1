@@ -1,0 +1,325 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+
+		<link rel="stylesheet" href="css/app.css" />
+		<link rel="stylesheet" href="css/mobile-angular-ui-hover.css" />
+		<link rel="stylesheet" href="css/mobile-angular-ui-base.css" />
+		<link rel="stylesheet" href="css/mobile-angular-ui-desktop.css" />
+		<script>
+			var serverURL = 'http://192.168.1.184/';
+		</script>
+
+	</head>
+
+	<!-- apply our angular app -->
+	<body   ng-app="IngGap" >
+		<div class="sidebar sidebar-left" toggleable parent-active-class="sidebar-left-in" id="mainSidebar" >
+			<h1 class="app-name">Főmenü</h1>
+
+			<div class="scrollable" >
+				<div class="scrollable-content">
+					<div class="list-group" toggle="off" bubble target="mainSidebar">
+						<a class="list-group-item" href="#">Összes ingatlan <i class="fa fa-chevron-right pull-right"></i></a>
+
+						<a class="list-group-item" href="#filter">Szűrés <i class="fa fa-chevron-right pull-right"></i></a>
+
+						<div  ng-if="!userLogged">
+							<h2 class="app-name">Vendég</h2>
+							<a class="list-group-item"  href="#newAd"> Új ingatlan <i class="fa fa-chevron-right pull-right"></i></a>
+							<a class="list-group-item"  href="#login"> Bejelentkezés <i class="fa fa-chevron-right pull-right"></i></a>
+							<a class="list-group-item"  href="#signup" > Regisztrálás <i class="fa fa-chevron-right pull-right"></i></a>
+
+						</div>
+
+						<br />
+						<div ng-if="userLogged">
+							<h2 class="app-name">{{userName}}</h2>
+							<a class="list-group-item"  href="#newAd"> Új ingatlan <i class="fa fa-chevron-right pull-right"></i></a>
+							<a class="list-group-item"  href="#myads">Hirdetéseim <i class="fa fa-chevron-right pull-right"></i></a>
+
+							<div ng-if="userId==17">
+								<a class="list-group-item"  ng-click="websqlreset()"> Telefonreset<i class="fa fa-chevron-right pull-right"></i></a>
+							</div>
+							<a class="list-group-item"   ng-click="logout()" > Kijelentkezés <i class="fa fa-chevron-right pull-right"></i></a>
+
+						</div>
+
+						<!-- ... -->
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="app" >
+
+			<!-- Navbars -->
+			<div class="navbar navbar-app navbar-absolute-top" >
+
+				<div class="navbar-brand navbar-brand-center" yield-to="title">
+					<span>Ingatlanok</span>
+				</div>
+
+				<div class="btn-group pull-left">
+					<div ng-click="toggle('mainSidebar')" class="btn btn-navbar sidebar-toggle">
+						<i class="fa fa-bars"></i> Menü
+					</div>
+				</div>
+
+			</div>
+
+			<div class="app-body">
+
+				<ng-view id="MainWrap" class="app-content" ng-hide="loading"></ng-view>
+
+			</div>
+		</div>
+
+		<!-- scripts -->
+		<!--csak tesztelésre
+		<script src="js/phonegap.js"></script>
+		-->
+
+		<script type="text/javascript" src="cordova.js"></script>
+
+		<script src="js/jquery.min.js"></script>
+		<script src="js/angular.js"></script>
+		<script src="js/anuglar-route.js"></script>
+		<script src="js/angular-cookies.js"></script>
+		<script src="js/angular-touch.js"></script>
+		<script src="js/mobile-angular-ui.js"></script>
+
+		<script type="text/javascript" charset="utf-8">
+			var pictureSource;
+			// picture source
+			var destinationType;
+			// sets the format of returned value
+			FileErrors = {
+				1 : 'File not found',
+				2 : 'Security error',
+				3 : 'Action Aborted',
+				4 : 'File not readable',
+				5 : 'Encoding error',
+				6 : 'No modification allowed',
+				7 : 'Invalid state error',
+				8 : 'Syntax error',
+				9 : 'Invalid modification error',
+				10 : 'Quota Exceeded',
+				11 : 'Type mismatch',
+				12 : 'Path exists'
+			};
+			// Wait for device API libraries to load
+			//
+			document.addEventListener("deviceready", onDeviceReady, false);
+
+			// device APIs are available
+			//
+			function onDeviceReady() {
+				//console.log("device is ready");
+				pictureSource = navigator.camera.PictureSourceType;
+				destinationType = navigator.camera.DestinationType;
+				window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+
+			}
+
+			function downloadImage(url, fileName) {
+				var ft = new FileTransfer();
+				ft.download(url, 'cdvfile://localhost/persistent/IngGap/' + fileName, function(entry) {
+					//console.log("download complete: " + entry.toURI());
+
+				}, function(error) {
+					//console.log("download error" + error.code);
+				});
+			}
+
+			// Called when a photo is successfully retrieved
+			//
+			function onPhotoDataSuccess(imageURI) {
+
+				var ingatlanKep = document.getElementById('ingatlanKep');
+
+				// Unhide image elements
+
+				// Show the captured photo
+				// The inline CSS rules are used to resize the image
+				//
+
+				$('#ingatlanKep').one("load", function() {
+					if ($('#ingatlanKep').width() < $('#ingatlanKep').height()) {
+						console.log('Légyszi csinálj fekvő képet :)');
+						$('#ingatlanKep').css("display", "none");
+						myScroll.refresh();
+
+					} else {
+						$('#ingatlanKep').css("display", "block");
+						myScroll.refresh();
+					};
+
+				}).attr("src", 'cdvfile://localhost/persistent/Android/data/com.lukacsisz.inggap/cache/' + imageURI.substring(imageURI.lastIndexOf('/') + 1));
+				//kész feladathoz com.lukacsisz.inggap
+				//teszteléshez com.adobe.phonegap.app
+			}
+
+			// Called when a photo is successfully retrieved
+			//
+			function onPhotoURISuccess(imageURI) {
+
+				var ingatlanKep = document.getElementById('ingatlanKep');
+
+				// Unhide image elements
+				//
+				ingatlanKep.style.display = 'block';
+
+				// Show the captured photo
+				// The inline CSS rules are used to resize the image
+
+				$('#ingatlanKep').one("load", function() {
+					if ($('#ingatlanKep').width() < $('#ingatlanKep').height()) {
+						console.log('Légyszi csinálj fekvő képet :)');
+						$('#ingatlanKep').css("display", "none");
+						myScroll.refresh();
+
+					} else {
+						$('#ingatlanKep').css("display", "block");
+						myScroll.refresh();
+					};
+
+				}).attr("src", imageURI);
+
+			}
+
+			// Called if something bad happens.
+			//
+			function onFail(message) {
+				console.log('Failed because: ' + message);
+			}
+
+			/**
+			 * Upload current picture
+			 */
+			function uploadPicture2(random, imageURI, imgneve) {
+
+				// Get URI of picture to upload
+
+				var imageURI = 'cdvfile://localhost/persistent/IngGap/' + imageURI;
+
+				// Verify server has been entered
+				server = serverURL + 'onlab1server/kepfeltoltes.php';
+				if (server) {
+					// Specify transfer options
+					var options = new FileUploadOptions();
+					options.fileKey = "file";
+					options.fileName = imgneve;
+					options.mimeType = "image/jpeg";
+					options.chunkedMode = false;
+					// Transfer picture to server
+					var ft = new FileTransfer();
+					ft.upload(imageURI, server, function(r) {
+						console.log(r.bytesSent + 'bit feltöltve');
+					}, function(error) {
+						console.log(error.code);
+					}, options);
+					return 'ok';
+				};
+
+			};
+			function uploadPicture(random) {
+
+				// Get URI of picture to upload
+				var img = document.getElementById('ingatlanKep');
+				var imageURI = img.src;
+				if (!imageURI || (img.style.display == "none")) {
+					console.log("Nincs még képe az ingatlannak.");
+					return;
+				};
+
+				// Verify server has been entered
+				server = serverURL + 'onlab1server/kepfeltoltes.php';
+				if (server) {
+
+					// Specify transfer options
+					var options = new FileUploadOptions();
+					options.fileKey = "file";
+					options.fileName = random + 1 + $('#alapterulet').val() + $('#telekterulet').val() + $('#ar').val() + '.jpg';
+					options.mimeType = "image/jpeg";
+					options.chunkedMode = false;
+
+					// Transfer picture to server
+					var ft = new FileTransfer();
+					ft.upload(imageURI, server, function(r) {
+						document.getElementById('camera_status').innerHTML = "Upload successful: " + r.bytesSent + " bytes uploaded.";
+					}, function(error) {
+						document.getElementById('camera_status').innerHTML = "Upload failed: Code = " + error.code;
+					}, options);
+					return 'ok';
+				};
+			};
+
+			function saveImg(kepNeve) {
+
+				// Get URI of picture to upload
+				var img = document.getElementById('ingatlanKep');
+				var imageURI = img.src;
+				if (!imageURI || (img.style.display == "none")) {
+					console.log("Nincs még képe az ingatlannak.");
+					//return;
+				};
+
+				directoryPath = 'cdvfile://localhost/persistent/IngGap';
+				newImageName = kepNeve;
+				imagePath = imageURI;
+				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
+			};
+
+			//-- file system beolvasás
+			function onFileSystemSuccess(fileSystem) {
+				console.log('onFileSystemSuccess: fileSystem.name ' + fileSystem.name + " : " + fileSystem.root.name);
+				window.resolveLocalFileSystemURI(directoryPath, onGetDocumentDirectorySuccess, onGetDocumentDirectoryFail);
+			}
+
+			function onFileSystemFail(error) {
+				console.log('onFileSystemFail: ' + FileErrors[error.code]);
+			}
+
+			//-------- mappa beolvasás
+			function onGetDocumentDirectoryFail(error) {
+				console.log('onGetDocumentDirectoryFail: ' + FileErrors[error.code]);
+			}
+
+			function onGetDocumentDirectorySuccess(directoryEntry) {
+				documentDirectory = directoryEntry;
+				console.log('onGetDocumentDirectorySuccess: ' + documentDirectory.toURL() + " isdirectory? : " + documentDirectory.isDirectory);
+				window.resolveLocalFileSystemURI(imagePath, onResolveSuccess, onResolveFail);
+			}
+
+			//-------- kép beolvasás
+			function onResolveSuccess(fileEntry) {
+				imageFileEntry = fileEntry;
+				console.log('onResolveSuccess: ' + imageFileEntry.fullPath + " isFile? : " + imageFileEntry.isFile);
+				imageFileEntry.copyTo(documentDirectory, newImageName, onCopyToSuccess, onCopyToFailed);
+			}
+
+			function onResolveFail(error) {
+				console.log('onResolveFail: ' + FileErrors[error.code]);
+			}
+
+			//----------- fájlmásolás
+
+			function onCopyToSuccess(fileEntry) {
+				console.log('-- savePhotoToDocuments: onCopyToSuccess');
+			}
+
+			function onCopyToFailed(error) {
+				console.log('-- savePhotoToDocuments: onCopyToFailed - ' + FileErrors[error.code] + " error.code : " + error.code);
+			}
+
+		</script>
+		<script type="text/javascript" src="js/sync.js"></script>
+		<script src="js/app.js"></script>
+
+	</body>
+</html>
